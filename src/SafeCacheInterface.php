@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace SafeCache;
 
-use SafeCache\Exceptions\CacheException;
+use KindErrors\KindError;
+use SafeCache\Errors\SafeCacheErrorKind;
 use SafeCache\Models\CacheGetMultipleRequest;
 use SafeCache\Models\CacheGetRequest;
 use SafeCache\Models\CacheSetMultipleRequest;
@@ -18,14 +19,14 @@ interface SafeCacheInterface
      *
      * @param CacheGetRequest<?mixed> $request
      *
-     * @return IOMonad<mixed,CacheException> the value of the item from the cache, or $default in case of cache miss
+     * @return IOMonad<mixed,KindError<SafeCacheErrorKind>> the value of the item from the cache, or $default in case of cache miss
      */
     public function get(CacheGetRequest $request): IOMonad;
 
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
      *
-     * @return IOMonad<null,CacheException> true on success and false on failure
+     * @return IOMonad<null,KindError<SafeCacheErrorKind>> true on success and false on failure
      */
     public function set(CacheSetRequest $request): IOMonad;
 
@@ -37,14 +38,14 @@ interface SafeCacheInterface
      * InvalidArgumentException  MUST be thrown if the $key string is not a legal value
      *   MUST be thrown if the $key string is not a legal value
      *
-     * @return IOMonad<null,CacheException> True if the item was successfully removed. False if there was an error.
+     * @return IOMonad<null,KindError<SafeCacheErrorKind>> True if the item was successfully removed. False if there was an error.
      */
     public function delete(string $key): IOMonad;
 
     /**
      * Wipes clean the entire cache's keys.
      *
-     * @return IOMonad<null,CacheException> true on success and false on failure
+     * @return IOMonad<null,KindError<SafeCacheErrorKind>> true on success and false on failure
      */
     public function clear(): IOMonad;
 
@@ -53,14 +54,14 @@ interface SafeCacheInterface
      *
      * @param CacheGetMultipleRequest<?mixed> $request
      *
-     * @return IOMonad<iterable<string,mixed>,CacheException> A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+     * @return IOMonad<iterable<string,mixed>,KindError<SafeCacheErrorKind>> A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
      */
     public function getMultiple(CacheGetMultipleRequest $request): IOMonad;
 
     /**
      * Persists a set of key => value pairs in the cache, with an optional TTL.
      *
-     * @return IOMonad<null,CacheException> true on success and false on failure
+     * @return IOMonad<null,KindError<SafeCacheErrorKind>> true on success and false on failure
      */
     public function setMultiple(CacheSetMultipleRequest $request): IOMonad;
 
@@ -73,7 +74,7 @@ interface SafeCacheInterface
      *                                  MUST be thrown if $keys is neither an array nor a Traversable,
      *                                  or if any of the $keys are not a legal value
      *
-     * @return IOMonad<null,CacheException> True if the items were successfully removed. False if there was an error.
+     * @return IOMonad<null,KindError<SafeCacheErrorKind>> True if the items were successfully removed. False if there was an error.
      */
     public function deleteMultiple(iterable $keys): IOMonad;
 
@@ -90,7 +91,7 @@ interface SafeCacheInterface
      * InvalidArgumentException
      *                    MUST be thrown if the $key string is not a legal value
      *
-     * @return IOMonad<bool,CacheException>
+     * @return IOMonad<bool,KindError<SafeCacheErrorKind>>
      */
     public function has(string $key): IOMonad;
 }
