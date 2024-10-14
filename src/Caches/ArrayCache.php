@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SafeCache\Models;
+namespace SafeCache\Caches;
 
 use DateInterval;
 use Psr\Clock\ClockInterface;
 use Psr\SimpleCache\CacheInterface;
+use SafeCache\Models\CachedItem;
 use Traversable;
 
 class ArrayCache implements CacheInterface
