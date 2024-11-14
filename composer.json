@@ -23,7 +23,7 @@
     "php": "~8.1",
     "zodimo/base-return": "^0",
     "psr/clock": "^1.0",
-    "psr/simple-cache": "^3.0",
+    "psr/simple-cache": "^2.0|^3.0",
     "zodimo/kind-errors": "^0.2.0"
   },
   "require-dev": {
