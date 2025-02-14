@@ -28,8 +28,8 @@ class SafeCacheErrorService
     public function createForCacheException(Throwable $exception, ErrorContext $context): KindError
     {
         $message = "Cache Exception: {$exception->getMessage()}";
-        if (!$context->has('exception')) {
-            $context->set('exception', $exception);
+        if (!$context->hasException()) {
+            $context->setException($exception);
         }
 
         return KindError::create(SafeCacheErrorKind::CacheException, $message, $context);
@@ -41,8 +41,8 @@ class SafeCacheErrorService
     public function createForInvalidArgumentException(InvalidArgumentException $exception, ErrorContext $context): KindError
     {
         $message = "InvalidArgumentException: {$exception->getMessage()}";
-        if (!$context->has('exception')) {
-            $context->set('exception', $exception);
+        if (!$context->hasException()) {
+            $context->setException($exception);
         }
 
         return KindError::create(SafeCacheErrorKind::InvalidArgument, $message, $context);

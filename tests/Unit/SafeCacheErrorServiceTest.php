@@ -30,14 +30,13 @@ class SafeCacheErrorServiceTest extends TestCase
         $errorService = new SafeCacheErrorService();
         $context = ErrorContext::create()->set('key', 'value');
         $mockInvalidArgumentException = $this->createMock(InvalidArgumentException::class);
-        $expectedErrorContextArray = [
-            'key' => 'value',
-            'exception' => $mockInvalidArgumentException,
-        ];
+
         $error = $errorService->createForInvalidArgumentException($mockInvalidArgumentException, $context);
         $this->assertInstanceOf(KindError::class, $error);
         $this->assertEquals(SafeCacheErrorKind::InvalidArgument, $error->getKind());
-        $this->assertSame($expectedErrorContextArray, $error->getContext());
+        $this->assertTrue($error->hasException());
+        $this->assertTrue($error->hasSpecificException(InvalidArgumentException::class));
+        $this->assertSame('value', $error->getContext()->get('key'));
     }
 
     public function testCanCreateFalseReturnValueError(): void
@@ -45,11 +44,11 @@ class SafeCacheErrorServiceTest extends TestCase
         $errorService = new SafeCacheErrorService();
 
         $context = ErrorContext::create()->set('key', 'value');
-        $errorContextArray = ['key' => 'value'];
+
         $error = $errorService->createForFalseReturnValue($context);
         $this->assertInstanceOf(KindError::class, $error);
         $this->assertEquals(SafeCacheErrorKind::ReturnFalseError, $error->getKind());
-        $this->assertEquals($errorContextArray, $error->getContext());
+        $this->assertEquals('value', $error->getContext()->get('key'));
     }
 
     public function testCanCreateCacheException(): void
@@ -57,14 +56,13 @@ class SafeCacheErrorServiceTest extends TestCase
         $errorService = new SafeCacheErrorService();
         $context = ErrorContext::create()->set('key', 'value');
         $exception = $this->createMock(Throwable::class);
-        $expectedErrorContextArray = [
-            'key' => 'value',
-            'exception' => $exception,
-        ];
+
         $error = $errorService->createForCacheException($exception, $context);
         $this->assertInstanceOf(KindError::class, $error);
 
         $this->assertEquals(SafeCacheErrorKind::CacheException, $error->getKind());
-        $this->assertEquals($expectedErrorContextArray, $error->getContext());
+        $this->assertTrue($error->hasException());
+        $this->assertTrue($error->hasSpecificException(Throwable::class));
+        $this->assertEquals('value', $error->getContext()->get('key'));
     }
 }
